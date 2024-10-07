@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container shadow-lg rounded p-4 mt-5" style="max-width: 600px; background-color: #f8f9fa; border: 1px solid #868686; box-shadow: 0 0 1000px rgba(0, 0, 0, 0.1);">
+    <h3 class="text-center mb-4" >Enroll Employee</h3>
+    <form>
+        <div class="mb-3">
+            <label for="employeenameinput" class="form-label" style="font-size: 24px;">Employee Name</label>
+            <input type="text" class="form-control" id="employeenameinput" name="employeenameinput" style="font-size: 18px;">
+        </div>
+        <div class="mb-3">
+            <label for="lastfourinput" class="form-label" style="font-size: 24px;">Last Four of Social Security Number</label>
+            <input type="password" class="form-control" id="lastfourinput" name="lastfourinput" style="font-size: 18px;">
+        </div>
+        <div class="d-flex justify-content-between">
+            <input class="btn btn-dark" type="submit" onclick="addEmployee(event)" value="Enroll" style="width: 48%; font-size: 20px;">
+            <button class="btn btn-dark" onclick="location.replace('/'); return false;" style="width: 48%; font-size: 20px;">Exit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block additionalscripts %}
+    <script src="{{url_for('static', filename='js/enrollemployee.js')}}"></script>
+{% endblock %}

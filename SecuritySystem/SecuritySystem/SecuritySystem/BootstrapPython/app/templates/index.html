@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container shadow-lg rounded p-4" style="max-width: 600px; background-color: #f8f9fa; border: 1px solid #868686; box-shadow: 0 0 1000px rgba(0, 0, 0, 0);">
+        <div class="d-flex justify-content-center align-items-center mb-4">
+            <input type="radio" class="btn-check" id="lockdoors" name="doorstate" {{ "checked" if door_state['lock_state'] == True }} value="locked">
+            <label class="btn btn-outline-dark" for="lockdoors" style="width: 150px; font-size: 20px;">Lock Doors</label>
+            <input type="radio" class="btn-check" id="unlockdoors" name="doorstate" value="unlocked" {{ "checked" if door_state['lock_state'] == False }}>
+            <label class="btn btn-outline-dark" for="unlockdoors" style="width: 150px; font-size: 20px;">Unlock Doors</label>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('enroll_employee') }}" style="font-size: 20px;">Enroll Employee</a>
+            <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('enrolled') }}" style="font-size: 20px;">View Enrolled</a>
+            <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('settings') }}" style="font-size: 20px;">Settings</a>
+        </div>
+
+        <p id="lockstate" class="text-center display-4 mb-4" style="color: #212529; font-weight: bold;">
+            {{ "Locked" if door_state['lock_state'] else "Unlocked" }}
+        </p>
+        
+
+
+        <!-- Añadir un contenedor con altura fija y desplazamiento -->
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Access Date Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log["name"] }}</td>
+                        <td>{{ log["access_date"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <a class="btn btn-outline-success" href="{{ url_for('download_logs') }}" style="width: 150px; font-size: 20px;">Download All Logs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additionalscripts %}
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

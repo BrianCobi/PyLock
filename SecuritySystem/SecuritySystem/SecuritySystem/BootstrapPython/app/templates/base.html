@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    {% block styles %}
+        {{ bootstrap.load_css() }}
+    {% endblock %}
+    {% block additionalstyles %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+    {% block scripts %}
+        <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+        {{ bootstrap.load_js() }}
+    {% endblock %}
+    {% block additionalscripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!-- templates/login.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container shadow-lg rounded p-4" style="max-width: 400px; border: 1px solid #868686; background-color: #f8f9fa;">
+        <h3 class="text-center mb-4">Login</h3>
+
+        <!-- Mostrar el estado de la puerta -->
+        <div class="text-center mb-4">
+            <p id="door-state" class="{% if door_state.lock_state %}locked{% else %}unlocked{% endif %}">
+                Door State: {{ "Locked" if door_state.lock_state else "Unlocked" }}
+            </p>
+        </div>
+
+        <form action="{{ url_for('login') }}" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block additionalscripts %}
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var socket = io.connect('http://192.168.2.1:5000');
+
+        socket.on('connect', function() {
+            console.log("Conectado al servidor Socket.IO");
+        });
+
+        socket.on('reload_page', function() {
+            console.log("Evento de recarga recibido, recargando la página...");
+            location.reload();  // Recargar la página
+        });
+    });
+</script>
+{% endblock %}
+
+{% block additionalstyles %}
+<style>
+    /* Estilos personalizados para el estado de la puerta */
+    #door-state {
+        font-size: 1.5rem; /* Tamaño de fuente más grande */
+        font-weight: bold; /* Texto en negritas */
+        text-transform: uppercase; /* Texto en mayúsculas */
+        padding: 10px; /* Espaciado interno */
+        border-radius: 5px; /* Bordes redondeados */
+        display: inline-block; /* Ajuste del contenedor del texto */
+    }
+
+    /* Estilo cuando la puerta está bloqueada */
+    #door-state.locked {
+        color: #ff4d4d; /* Color rojo claro */
+        background-color: #ffe6e6; /* Fondo blanco rosado */
+        border: 1px solid #000000; /* Borde rojo claro */
+    }
+
+    /* Estilo cuando la puerta está desbloqueada */
+    #door-state.unlocked {
+        color: #007e00; /* Color verde claro */
+        background-color: #e6ffe6; /* Fondo blanco verdoso */
+        border: 1px solid #000000; /* Borde verde claro */
+    }
+</style>
+{% endblock %}
