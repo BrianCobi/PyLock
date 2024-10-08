@@ -2,11 +2,12 @@ from flask import render_template, request, redirect, url_for, session, flash,  
 from app import app, socketio
 from database.databasecontrol import *
 from datetime import datetime
-from DoorControl import *
+# from DoorControl import *
 import csv
 import io
 # routes.py
-
+import os
+from collections import defaultdict
 
 
 # Clave dura para la autenticación
@@ -33,6 +34,32 @@ def login():
             return render_template('login.html', error=error, door_state=door_state)
     
     return render_template('login.html', door_state=door_state)
+
+
+
+IMAGE_FOLDER = 'app/static/images/'
+
+@app.route('/imageviewer')
+def imageviewer():
+    # Crear un diccionario para agrupar las imágenes por fecha
+    images_by_date = defaultdict(list)
+
+    # Listar las imágenes en el directorio
+    for filename in os.listdir(IMAGE_FOLDER):
+        if filename.endswith(".jpg") or filename.endswith(".png"):  # Solo incluir imágenes
+            # Extraer la parte de la fecha del nombre del archivo (por ejemplo, 20241007)
+            date_str = filename.split('_')[1]
+            # Convertir la fecha a un objeto datetime para facilitar la ordenación
+            date = datetime.strptime(date_str, "%Y%m%d")
+            # Agregar la imagen a la lista correspondiente a esa fecha
+            images_by_date[date].append(filename)
+    
+    # Ordenar las fechas en orden descendente (más reciente primero)
+    sorted_dates = sorted(images_by_date.keys(), reverse=True)
+    
+    # Pasar las imágenes agrupadas y ordenadas a la plantilla
+    return render_template('imageviewer.html', images_by_date=images_by_date, sorted_dates=sorted_dates)
+
 
 
 @app.route('/')
@@ -93,38 +120,6 @@ def convert_to_24_hour(time_str):
         raise ValueError("Time data does not match expected format")
 
     return time_obj.strftime('%H:%M:%S')
-
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     records = get_all_records()
-#     # print("Print records")
-#     # print(records)
-#     logs = []
-#     for record in records:
-#         print(record)
-#         Name = record[1] + " "  + record[2]
-#         Date = record[3]
-#         # print(Name + Date)
-#         access_dict = {
-#             "name": Name,
-#             "access_date": Date,
-#         }
-#         logs.append(access_dict)
-#     x = get_setting_by_id(1)
-#     # print(x[3])
-#     # print(f"Cheking state: {x[3]}")
-#     print(f"Setting HTML STATE TO {x[3]} ")
-#     if x[3]:
-#         door_state={
-#             "lock_state": True
-#         }
-#     else:        
-#         door_state={
-#             "lock_state": False
-#         }
-
-#     return render_template('index.html', title='Home', door_state=door_state, logs=logs)
 
 @app.get('/enroll_employee')
 def enroll_employee():
@@ -187,7 +182,6 @@ def update_doorstate():
     print(door_state['state'])
     socketio.emit('reload_page')
     print(f"Setting database state to {door_state['state']} ")
-    # GPIOinitialization()
     if door_state['state'] == 'unlocked':
         update_setting_database(setting_id=1, is_active=0)
     else:

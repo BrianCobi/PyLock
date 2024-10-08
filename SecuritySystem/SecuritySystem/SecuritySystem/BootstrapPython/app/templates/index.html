@@ -15,6 +15,9 @@
             <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('enrolled') }}" style="font-size: 20px;">View Enrolled</a>
             <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('settings') }}" style="font-size: 20px;">Settings</a>
         </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a class="btn btn-dark flex-fill mx-1" href="{{ url_for('imageviewer') }}" style="font-size: 20px;">View faild tries</a>
+        </div>
 
         <p id="lockstate" class="text-center display-4 mb-4" style="color: #212529; font-weight: bold;">
             {{ "Locked" if door_state['lock_state'] else "Unlocked" }}

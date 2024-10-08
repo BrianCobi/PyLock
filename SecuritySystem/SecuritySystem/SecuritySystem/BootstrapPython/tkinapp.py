@@ -3,11 +3,14 @@ import time
 from math import sin, cos, pi
 import threading
 from database.databasecontrol import *
-from DoorControl import *
+# from DoorControl import *
 from datetime import datetime
 import requests
 import subprocess
 import socket
+
+
+from camara import *
 
 class SynchronizedSpinner(tk.Canvas):
     def __init__(self, parent, **kwargs):
@@ -109,7 +112,7 @@ class MyApp(tk.Tk):
         self.title("VBS PyLock")
         self.geometry("1024x600")
         # self.configure(bg='red')  # Set the background color of the entire application
-        self.attributes('-fullscreen',True)
+        # self.attributes('-fullscreen',True)
 
         self.layout = tk.Frame(self)
         self.layout.pack(expand=True, fill='both')
@@ -117,7 +120,7 @@ class MyApp(tk.Tk):
         self.bind('<Shift-Alt-Key-question>', self.open_terminal)        # self.layout.configure(bg='black')  # Set the background color of the layout frame
 
 
-        GPIOinitialization()
+        # GPIOinitialization()
         self.icon_image = tk.PhotoImage(file='test1.png').subsample(7, 7)
         self.pylock_label = tk.Label(self.layout, text="", font=('Courier New', 40), fg='black')
         self.pylock_label.place(relx=0.5, rely=0.1, anchor='center')
@@ -135,7 +138,7 @@ class MyApp(tk.Tk):
         self.previous_state = None  # Para almacenar el estado previo
         self.previous_timeclose = None
         self.onlyonce = True
-        TurnOnBackup()
+        # TurnOnBackup()
         self.check_lockdown()  # Inicializa la verificación periódica
 
     def open_terminal(self, event):
@@ -160,14 +163,10 @@ class MyApp(tk.Tk):
             update_setting_database(setting_id=1, is_active=1)
             self.onlyonce = False
             print("Setting up onlyonce to True")
-            response = requests.post('http://localhost:5000/trigger_reload')
-            requests.post(f'http://192.168.2.1:5000/trigger_reload')
+            # response = requests.post('http://localhost:5000/trigger_reload')
+            # requests.post(f'http://192.168.2.1:5000/trigger_reload')
             # response = requests.post('http://192.168.2.2:5000/trigger_reload')
 
-
-        # now = datetime.now()
-        # if now.hour == 0 and now.minute == 0:
-        #     self.onlyonce = True
         if timeclose == False:
             self.onlyonce = True
 
@@ -175,11 +174,11 @@ class MyApp(tk.Tk):
         if LockControl != self.previous_state:
             if LockControl:
                 print("Changing to locked state")
-                LockAll()
+                # LockAll()
                 self.start_lockdown_mode()
             else:
                 print("Changing to unlocked state")
-                unlookAll()
+                # unlookAll()
                 self.unlocksystem()
             
             # Actualizar los estados previos
@@ -262,10 +261,9 @@ class MyApp(tk.Tk):
 
     def show_spinner(self):
 
-
+        capture_photo()
+        
         self.focus_set()
-        #Check for valid data entry
-        # self.checkaccess()
         employees = get_all_employees()
         print('Cheking employees')
         content = self.text_input.get() 
@@ -330,8 +328,6 @@ class MyApp(tk.Tk):
         # Mostrar el spinner por 5 segundos
         self.after(1000, self.show_welcome_message, spinner, content, EmployeeExist, Access)
 
-    # def checkaccess(self):
-    #     # print("Checking access")
 
     def show_welcome_message(self, spinner, content, EmployeeExist, Access):
         # Elimina el spinner
@@ -344,13 +340,8 @@ class MyApp(tk.Tk):
             formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
             datelabel = tk.Label(self.layout, text=formatted_now, font=('Arial', 45))
             datelabel.place(relx=0.5, rely=0.4, anchor='center')
-            # if not Last == "failed":
             insert_tracking(First, Last, formatted_now)
-            # response = requests.post('http://localhost:5000/trigger_reload')
-            #hostname = socket.gethostname()
-            #local_ip = socket.gethostbyname(hostname)
-            #print(local_ip)
-            requests.post(f'http://192.168.2.1:5000/trigger_reload')
+            # requests.post(f'http://192.168.2.1:5000/trigger_reload')
                     
             return messagelabel, datelabel
 
@@ -361,7 +352,7 @@ class MyApp(tk.Tk):
                 First = Name[0]
                 Last = Name[1] if len(Name)>1 else " "
                 messagelabel, datelabel = sendmessague(First, Last, Access['Message'])
-                threading.Thread(target=switchwait, args=(19,5,), daemon=True).start()
+                # threading.Thread(target=switchwait, args=(19,5,), daemon=True).start()
             else:
                 Name =  content.split(" ")
                 First = Name[0]

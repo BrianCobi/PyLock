@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Image Viewer</h1>
+
+        <!-- Iterar sobre las fechas ordenadas -->
+        {% for date in sorted_dates %}
+            <h2 class="text-center mt-5 mb-5">{{ date.strftime('%Y-%m-%d') }}</h2>  <!-- Mostrar la fecha en formato legible -->
+
+            <div class="row">
+                <!-- Iterar sobre las imágenes correspondientes a esa fecha -->
+                {% for image in images_by_date[date] %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/' + image) }}" class="card-img-top" alt="{{ image }}">
+                        <div class="card-body">
+                            <p class="card-text">{{ image }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

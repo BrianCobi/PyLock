@@ -16,27 +16,7 @@ function clearEmployee(event){
     $('#allowafterhoursaccess').prop('checked',false);
 }
 
-// function deleteEmployee(event){
-//     event.preventDefault();
-//     var employeeName = $('#employeenameinput').val();
-//     if(employeeName !== ''){
-//         var enrolledEmployees = Array.from($('#enrolledemployeestablebody').children());
-//         var employeeToDelete = enrolledEmployees.find((employee) => employee.children[0].innerText === employeeName);
-//         if(employeeToDelete !== undefined){
-//             employeeToDelete.remove();
-//             clearEmployee();
-//         }
-//         fetch('delete_employee',{
-//             method: 'DELETE',
-//             headers:{
-//                 'Content-Type':'application/json',
-//             },
-//             body: JSON.stringify({'name':employeeName})
-//         })
-//     }else{
-//         alert('Please select an employee')
-//     }
-// }
+
 
 async function deleteEmployee(event) {
     event.preventDefault();
